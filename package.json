@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Growth/growth.git"
+    "url": "https://github.com/growth/growth.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Growth/growth/issues"
+    "url": "https://github.com/growth/growth/issues"
   },
-  "homepage": "https://github.com/Growth/growth"
+  "homepage": "https://github.com/growth/growth"
 }
