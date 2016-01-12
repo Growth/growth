@@ -1,0 +1,19 @@
+{
+  "name": "growth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Growth/growth.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Growth/growth/issues"
+  },
+  "homepage": "https://github.com/Growth/growth"
+}
