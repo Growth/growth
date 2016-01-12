@@ -1,15 +1,10 @@
-# Growth Core
+# Growth
 
-JavaScript (ES6) Utils to make modular / scalable libraries.
+JavaScript (ES6) utils to make modular and scalable libraries.
 
 * Events
-
 * Tags
-
 * Queues
-
 * Tasks
-
 * Components
-
 * Entities
