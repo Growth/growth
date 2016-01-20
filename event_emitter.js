@@ -1,4 +1,4 @@
-const listenersBoxes = new WeakMap()
+const listenersRegisters = new WeakMap()
 const globalEmitters = {}
 
 
@@ -45,7 +45,7 @@ function removeListener (emitter, eventName, listener) {
 
 
 function clearEmitter (emitter) {
-    const listenersBox = getListenersBox(emitter)
+    const listenersBox = getListenersRegister(emitter)
     for (let eventName in listenersBox) {
         delete listenersBox[eventName]
     }
@@ -59,26 +59,26 @@ function clearListeners (emitter, eventName) {
 
 
 
-function getListenersBox (emitter) {
+function getListenersRegister (emitter) {
     if (typeof emitter === 'string') {
         globalEmitters[emitter] = globalEmitters[emitter] || Symbol()
         emitter = globalEmitters[emitter]
     }
 
-    if (!listenersBoxes.has(emitter)) {
-        listenersBoxes.set(emitter, {})
+    if (!listenersRegisters.has(emitter)) {
+        listenersRegisters.set(emitter, {})
     }
 
-    return listenersBoxes.get(emitter)
+    return listenersRegisters.get(emitter)
 }
 
 
 
 function listenersFor (emitter, eventName) {
-    const listenerBox = getListenersBox(emitter)
-    listenerBox[eventName] = listenerBox[eventName] || []
+    const listenersRegister = getListenersRegister(emitter)
+    listenersRegister[eventName] = listenersRegister[eventName] || []
 
-    return listenerBox[eventName]
+    return listenersRegister[eventName]
 }
 
 
