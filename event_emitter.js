@@ -1,21 +1,10 @@
 const listenersBoxes = new WeakMap()
-const globalListenersBoxes = {}
+const globalEmitters = {}
 
 
 
 function addListener (emitter, eventName, listener) {
     listenersFor(emitter, eventName).push(listener)
-}
-
-
-
-function removeListener (emitter, eventName, listener) {
-    const listeners = listenersFor(emitter, eventName)
-
-    const index = listeners.indexOf(listener)
-    if(index !== -1) {
-        listeners.splice(index, 1)
-    }
 }
 
 
@@ -38,6 +27,23 @@ function dispatchEvent (emitters, eventName, ...args) {
 
 
 
+function forwardToEmit (emitter, eventName) {
+    return (...args) => emitEvent(emitter, eventName, ...args)
+}
+
+
+
+function removeListener (emitter, eventName, listener) {
+    const listeners = listenersFor(emitter, eventName)
+
+    const index = listeners.indexOf(listener)
+    if(index !== -1) {
+        listeners.splice(index, 1)
+    }
+}
+
+
+
 function clearEmitter (emitter) {
     const listenersBox = getListenersBox(emitter)
     for (let eventName in listenersBox) {
@@ -55,8 +61,8 @@ function clearListeners (emitter, eventName) {
 
 function getListenersBox (emitter) {
     if (typeof emitter === 'string') {
-        globalListenersBoxes[emitter] = globalListenersBoxes[emitter] || Symbol()
-        emitter = globalListenersBoxes[emitter]
+        globalEmitters[emitter] = globalEmitters[emitter] || Symbol()
+        emitter = globalEmitters[emitter]
     }
 
     if (!listenersBoxes.has(emitter)) {
@@ -73,12 +79,6 @@ function listenersFor (emitter, eventName) {
     listenerBox[eventName] = listenerBox[eventName] || []
 
     return listenerBox[eventName]
-}
-
-
-
-function forwardToEmit (emitter, eventName) {
-    return (...args) => emitEvent(emitter, eventName, ...args)
 }
 
 
