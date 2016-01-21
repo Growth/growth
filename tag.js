@@ -26,7 +26,7 @@ function findByTag (tagName) {
 
 
 
-function eachItemTagged (tagName, iterator) {
+function eachTaggedItem (tagName, iterator) {
     for (let item of getTag(tagName)) {
         iterator(item)
     }
@@ -49,6 +49,5 @@ export {
     untag,
     hasTag,
     findByTag,
-    eachByTag,
-    eachItemTagged
+    eachTaggedItem
 }
