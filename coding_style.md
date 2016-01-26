@@ -1,15 +1,21 @@
 # Growth - ES6 Coding Style
 
 
-- Use soft tabs with 4 spaces
+## Use **soft tabs** with **4 spaces**
 ```js
+// Okay
 function useSoftTabsPlease () {
-    // with 4 spaces
+  // 2 spaces
+}
+
+// Better
+function useSoftTabsPlease () {
+    // better with 4 spaces
 }
 ```
 
 
-- Don't use *var* statement
+## Don't use **var** statement
 ```js
 // Meh
 var hello = 'world'
@@ -19,7 +25,7 @@ const hello = 'world'
 ```
 
 
-- Don't use semicolons
+## Don't use semicolons
 ```js
 // Okay
 const hello = 'world';
@@ -29,7 +35,7 @@ const hello = 'world'
 ```
 
 
-- Prefer *const* rather than *let*
+## Prefer **const** rather than **let**
 ```js
 // Okay
 let player = {life: 100}
@@ -46,7 +52,7 @@ player = {life: 90}
 ```
 
 
-- Use single quotes
+## Use single quotes
 ```js
 // Meh
 const hello = "world"
@@ -56,7 +62,7 @@ const hello = 'world'
 ```
 
 
-- Add a space before parens in function declaration
+## Add a space before parens in function declaration
 ```js
 
 // Meh
