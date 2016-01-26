@@ -1,7 +1,6 @@
 # Growth - ES6 Coding Style
 
 
-
 ## Don't use **var** statement
 ```js
 // Meh

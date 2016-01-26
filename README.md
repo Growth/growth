@@ -8,3 +8,8 @@ JavaScript (ES6) utils to make modular and scalable libraries.
 * Tasks
 * Components
 * Entities
+
+
+## Guides
+
+* [Coding Style](https://github.com/Growth/growth/blob/master/coding_style.md)
