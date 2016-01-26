@@ -28,7 +28,7 @@ describe('Event', function () {
 
 
 
-    it('should add listener and emit event', function () {
+    it('should add a listener and emit an event', function () {
         addListener(mock, 'event name', increment)
         emitEvent(mock, 'event name')
 
@@ -119,7 +119,7 @@ describe('Event', function () {
 
 
 
-    it('should forward to emit', function () {
+    it('should forward params to an emit proxy', function () {
         addListener(mock, 'event name', (value) => passed += value)
 
         function foo (callback) {
