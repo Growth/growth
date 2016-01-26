@@ -1,19 +1,6 @@
 # Growth - ES6 Coding Style
 
 
-## Use **soft tabs** with **4 spaces**
-```js
-// Okay
-function useSoftTabsPlease () {
-  // 2 spaces
-}
-
-// Better
-function useSoftTabsPlease () {
-    // better with 4 spaces
-}
-```
-
 
 ## Don't use **var** statement
 ```js
@@ -42,7 +29,6 @@ let player = {life: 100}
 
 // Best
 const player = {life: 100}
-player.life -= 10
 
 // const don't mean immutable: this will work
 player.life -= 10
@@ -73,5 +59,42 @@ function useSpacePlease(firstArg, secondArg) {
 // Best
 function useSpacePlease (firstArg, secondArg) {
 
+}
+```
+
+## Use snakeCase for identifiers except for Constructors, Classes and Namespaces
+```js
+// Meh
+const PlayerState = {}
+
+const PLAYER_STATE = {}
+
+const player_state = {}
+
+
+// Best
+const playerState = {}
+
+function Player () {
+
+}
+
+class Player {
+
+}
+
+const Namespace = {}
+```
+
+## Use **soft tabs** with **4 spaces**
+```js
+// Okay
+function useSoftTabsPlease () {
+  // 2 spaces
+}
+
+// Better
+function useSoftTabsPlease () {
+    // better with 4 spaces
 }
 ```
