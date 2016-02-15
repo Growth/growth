@@ -8,9 +8,9 @@ import {
 describe('Task', function () {
 
 
-    function asyncFunction (done, value) {
+    function asyncFunction (next, value) {
         setTimeout(function () {
-            done(value);
+            next(value);
         }, 1);
     }
 
