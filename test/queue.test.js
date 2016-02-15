@@ -1,0 +1,50 @@
+import expect from 'expect.js'
+import {enqueue, processQueue, clearQueue} from '../lib/queue'
+import {tag, findByTag} from '../lib/tag'
+
+
+describe('Queue', function () {
+
+
+    it('should enqueue a processor', function () {
+
+        enqueue('queueName', (next) => next())
+        enqueue('queueName', (next) => next())
+
+        expect(findByTag('queue.queueName').size).to.be(2)
+    })
+
+
+
+    it('should clear a queue', function () {
+
+        enqueue('queueName', (next) => next())
+        enqueue('queueName', (next) => next())
+
+        clearQueue('queueName')
+
+        expect(findByTag('queue.queueName').size).to.be(0)
+    })
+
+
+
+    it('should process a queue', function (done) {
+
+        let inc = 0
+        enqueue('queueName', (next) => {inc += 1; next()})
+        enqueue('queueName', (next) => {inc += 1; next()})
+
+        enqueue('queueName', function (next) {
+            setTimeout(function () {
+                inc += 1
+                next()
+                expect(inc).to.be(3)
+                done()
+            }, 1)
+        })
+
+        processQueue('queueName')
+    })
+
+
+})

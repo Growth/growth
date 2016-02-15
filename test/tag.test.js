@@ -4,7 +4,7 @@ import {
     untag,
     hasTag,
     findByTag,
-    eachByTag
+    clearTag
 } from '../lib/tag'
 
 
@@ -38,10 +38,11 @@ describe('Tag', function () {
 
 
 
-    it('should iterate on items by tag', function () {
-        const _countries = []
-        eachByTag('country', (country) => _countries.push(country))
-        expect(_countries).to.be.eql(countries)
+    it('should clear a tag', function () {
+        countries.forEach((country) => tag(country, 'country'))
+        clearTag('country')
+
+        expect(findByTag('country').size).to.be.eql(0)
     })
 
 
