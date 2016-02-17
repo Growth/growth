@@ -16,7 +16,7 @@ describe('Task', function () {
 
 
 
-    it('should spawn task', function (done) {
+    it('should spawn a task', function (done) {
         spawnTask(function * (next) {
             let passed
 
