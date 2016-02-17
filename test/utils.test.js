@@ -3,7 +3,7 @@ import {
     deferredApply,
     deferredCall,
     defer,
-    wrap,
+    wrapFunction,
     checkType,
     isString,
     addNamespace
@@ -61,7 +61,7 @@ describe('Utils', function () {
         function hello (a, b) {
             return a + b
         }
-        const wrappedFunction = wrap(hello, function (a, b) {
+        const wrappedFunction = wrapFunction(hello, function (a, b) {
             a += 1
             b += 1
             return [a, b]
