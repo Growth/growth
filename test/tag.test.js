@@ -5,7 +5,8 @@ import {
     hasTag,
     findByTag,
     clearTag,
-    deleteTag
+    deleteTag,
+    tagGetter
 } from '../lib/tag'
 
 
@@ -71,6 +72,14 @@ describe('Tag', function () {
     it('should find tag by name or by the tag itself', function () {
         const tagG = findByTag('tagG')
         expect(findByTag('tagG') === findByTag(tagG)).to.be.ok()
+    })
+
+
+
+    it('define a tag getter with namespace', function () {
+        const getCustom = tagGetter('custom')
+        tag(item, getCustom('tagA'))
+        expect(hasTag(item, 'custom.tagA')).to.be.ok()
     })
 
 
