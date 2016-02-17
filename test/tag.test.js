@@ -57,4 +57,11 @@ describe('Tag', function () {
     })
 
 
+
+    it('should find tag by name or by the tag itself', function () {
+        const hello = findByTag('hello')
+        expect(findByTag('hello') === findByTag(hello)).to.be.ok()
+    })
+
+
 })
