@@ -3,8 +3,10 @@ import {
     deferredApply,
     deferredCall,
     defer,
+    wrap,
     checkType,
-    isString
+    isString,
+    addNamespace
 } from '../lib/utils'
 
 
@@ -52,6 +54,28 @@ describe('Utils', function () {
     it('should check string type', function () {
         expect(isString('Hello')).to.be.ok()
     })
+
+
+
+    it('should wrap a function', function () {
+        function hello (a, b) {
+            return a + b
+        }
+        const wrappedFunction = wrap(hello, function (a, b) {
+            a += 1
+            b += 1
+            return [a, b]
+        })
+        expect(wrappedFunction(1, 2)).to.be.eql(5)
+    })
+
+
+
+    it('should prefix a string with namespace', function () {
+        const namespaced = addNamespace('identifier', 'namespace')
+        expect(namespaced).to.be.eql('namespace.identifier')
+    })
+
 
 
 })
