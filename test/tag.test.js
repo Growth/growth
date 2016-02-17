@@ -4,7 +4,8 @@ import {
     untag,
     hasTag,
     findByTag,
-    clearTag
+    clearTag,
+    deleteTag
 } from '../lib/tag'
 
 
@@ -43,6 +44,16 @@ describe('Tag', function () {
         clearTag('country')
 
         expect(findByTag('country').size).to.be.eql(0)
+    })
+
+
+
+    it('should delete a tag', function () {
+        tag({}, 'hello')
+        const hello = findByTag('hello')
+        deleteTag('hello')
+
+        expect(findByTag('hello') !== hello).to.be.ok()
     })
 
 
