@@ -47,4 +47,53 @@ describe('Queue', function () {
     })
 
 
+
+    it('should enqueue while processing', function (done) {
+        let inc = 0
+        enqueue('queueName', (next) => {inc += 1; next()})
+        enqueue('queueName', function (next) {
+            setTimeout(function () {
+                inc += 1
+                next()
+            }, 1)
+        })
+        processQueue('queueName')
+        enqueue('queueName', function (next) {
+            setTimeout(function () {
+                inc += 1
+                next()
+                expect(inc).to.be(3)
+                done()
+            }, 1)
+        })
+    })
+
+
+
+    it('should not process already running queue', function (done) {
+        let inc = 0
+        enqueue('queueName', (next) => {inc += 1; next()})
+        enqueue('queueName', (next) => {inc += 1; next()})
+
+        enqueue('queueName', function (next) {
+            setTimeout(function () {
+                inc += 1
+                next()
+                checkDone()
+            }, 1)
+        })
+
+        function checkDone () {
+            setTimeout(function () {
+                expect(inc).to.be(3)
+                done()
+            }, 1);
+        }
+
+        processQueue('queueName')
+        processQueue('queueName')
+    })
+
+
+
 })
