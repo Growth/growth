@@ -1,12 +1,16 @@
 import expect from 'expect.js'
 import {
+    createTag,
+    checkTag,
+    getTag,
     tag,
     untag,
     hasTag,
-    findByTag,
     clearTag,
     deleteTag,
-    tagGetter
+    tagGetter,
+    tagChecker,
+    tagCreator
 } from '../lib/tag'
 
 
@@ -17,11 +21,12 @@ describe('Tag', function () {
     const countries = ['France', 'Spain', 'Germany']
 
 
+
     it('should tag an item', function () {
         tag(item, 'tagA')
         expect(hasTag(item, 'tagA')).to.be.ok()
 
-        const tagB = findByTag('tagB')
+        const tagB = getTag('tagB')
         tag(item, tagB)
         expect(hasTag(item, tagB)).to.be.ok()
     })
@@ -45,7 +50,7 @@ describe('Tag', function () {
     it('should find items by tag name', function () {
         countries.forEach((country) => tag(country, 'tagD'))
 
-        expect(findByTag('country')).to.be.eql(new Set(countries))
+        expect(getTag('country')).to.be.eql(new Set(countries))
     })
 
 
@@ -54,32 +59,49 @@ describe('Tag', function () {
         countries.forEach((country) => tag(country, 'tagE'))
         clearTag('tagE')
 
-        expect(findByTag('tagE').size).to.be.eql(0)
+        expect(getTag('tagE').size).to.be.eql(0)
     })
 
 
 
     it('should delete a tag', function () {
         tag(item, 'tagF')
-        const tagF = findByTag('tagF')
+        const tagF = getTag('tagF')
         deleteTag('tagF')
 
-        expect(findByTag('tagF') !== tagF).to.be.ok()
+        expect(getTag('tagF') !== tagF).to.be.ok()
     })
 
 
 
-    it('should find tag by name or by the tag itself', function () {
-        const tagG = findByTag('tagG')
-        expect(findByTag('tagG') === findByTag(tagG)).to.be.ok()
+    it('should get tag by name or by the tag itself', function () {
+        const tagG = getTag('tagG')
+        expect(getTag('tagG') === getTag(tagG)).to.be.ok()
     })
 
 
 
     it('define a tag getter with namespace', function () {
-        const getCustom = tagGetter('custom')
-        tag(item, getCustom('tagA'))
-        expect(hasTag(item, 'custom.tagA')).to.be.ok()
+        const getCustom = tagGetter('customA')
+        tag(item, getCustom('tagH'))
+        expect(hasTag(item, 'customA.tagH')).to.be.ok()
+    })
+
+
+
+    it('define a tag checker with namespace', function () {
+        const checkCustom = tagChecker('customB')
+        expect(checkCustom('tagI')).to.not.be.ok()
+        createTag('customB.tagI')
+        expect(checkCustom('tagI')).to.be.ok()
+    })
+
+
+
+    it('define a tag creator with namespace', function () {
+        const createCustom = tagCreator('customC')
+        expect(createCustom('tagJ')).to.be.ok()
+        expect(createCustom('tagJ')).to.not.be.ok()
     })
 
 
