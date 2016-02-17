@@ -1,7 +1,11 @@
 import expect from 'expect.js'
-import {enqueue, processQueue, clearQueue} from '../lib/queue'
 import {tag, findByTag} from '../lib/tag'
-
+import {
+    enqueue,
+    processQueue,
+    clearQueue,
+    isRunningQueue
+} from '../lib/queue'
 
 describe('Queue', function () {
 
@@ -94,6 +98,24 @@ describe('Queue', function () {
         processQueue('queueName')
     })
 
+
+
+    it('should check running queue state', function (done) {
+
+        let inc = 0
+        enqueue('queueName', (next) => next())
+        enqueue('queueName', (next) => next())
+
+        enqueue('queueName', function (next) {
+            setTimeout(function () {
+                next()
+                done()
+            }, 1)
+        })
+
+        processQueue('queueName')
+        expect(isRunningQueue('queueName')).to.be.ok()
+    })
 
 
 })
