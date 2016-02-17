@@ -1,7 +1,5 @@
 import expect from 'expect.js'
-import {
-    spawnTask
-} from '../lib/task'
+import {spawnTask} from '../lib/task'
 
 
 
