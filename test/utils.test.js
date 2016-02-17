@@ -2,7 +2,9 @@ import expect from 'expect.js'
 import {
     deferredApply,
     deferredCall,
-    defer
+    defer,
+    checkType,
+    isString
 } from '../lib/utils'
 
 
@@ -36,6 +38,19 @@ describe('Utils', function () {
             expect(arg1 && arg2).to.be.ok()
             done()
         }, null, true, true)
+    })
+
+
+
+    it('should check types', function () {
+        expect(checkType('Hello', 'string')).to.be.ok()
+        expect(checkType({}, 'object')).to.be.ok()
+    })
+
+
+
+    it('should check string type', function () {
+        expect(isString('Hello')).to.be.ok()
     })
 
 
