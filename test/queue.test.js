@@ -3,6 +3,7 @@ import {tag, getTag} from '../lib/tag'
 import {
     enqueue,
     processQueue,
+    stopQueue,
     clearQueue,
     isRunningQueue
 } from '../lib/queue'
@@ -20,18 +21,6 @@ describe('Queue', function () {
 
 
 
-    it('should clear a queue', function () {
-
-        enqueue('queueB', (next) => next())
-        enqueue('queueB', (next) => next())
-
-        clearQueue('queueB')
-
-        expect(getTag('queue.queueB').size).to.be(0)
-    })
-
-
-
     it('should process a queue', function (done) {
 
         let inc = 0
@@ -44,10 +33,48 @@ describe('Queue', function () {
                 next()
                 expect(inc).to.be(3)
                 done()
-            }, 1)
+            })
         })
 
         processQueue('queueC')
+    })
+
+
+
+    it('should clear a queue', function () {
+
+        enqueue('queueB', (next) => next())
+        enqueue('queueB', (next) => next())
+
+        clearQueue('queueB')
+
+        expect(getTag('queue.queueB').size).to.be(0)
+    })
+
+
+
+    it('should stop a queue while processing', function (done) {
+        let inc = 0
+        enqueue('queueD', (next) => {inc += 1; next()})
+        enqueue('queueD', function (next) {
+            setTimeout(function () {
+                inc += 1
+                stopQueue('queueD')
+                setTimeout(function () {
+                    expect(inc).to.be(2)
+                    done()
+                }, 10)
+                next()
+            })
+        })
+        enqueue('queueD', function (next) {
+            setTimeout(function () {
+                inc += 1
+                next()
+                done()
+            })
+        })
+        processQueue('queueD')
     })
 
 
@@ -59,7 +86,7 @@ describe('Queue', function () {
             setTimeout(function () {
                 inc += 1
                 next()
-            }, 1)
+            })
         })
         processQueue('queueD')
         enqueue('queueD', function (next) {
@@ -68,7 +95,7 @@ describe('Queue', function () {
                 next()
                 expect(inc).to.be(3)
                 done()
-            }, 1)
+            })
         })
     })
 
@@ -84,14 +111,14 @@ describe('Queue', function () {
                 inc += 1
                 next()
                 checkDone()
-            }, 1)
+            })
         })
 
         function checkDone () {
             setTimeout(function () {
                 expect(inc).to.be(3)
                 done()
-            }, 1);
+            });
         }
 
         processQueue('queueE')
@@ -110,7 +137,7 @@ describe('Queue', function () {
             setTimeout(function () {
                 next()
                 done()
-            }, 1)
+            })
         })
 
         processQueue('queueF')
