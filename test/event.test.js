@@ -37,10 +37,24 @@ describe('Event', function () {
 
 
 
+    it('should not add the same listener twice', function () {
+        addListener(mock, 'event name', increment)
+        addListener(mock, 'event name', increment)
+        emitEvent(mock, 'event name')
+
+        expect(passed).to.be(1)
+    })
+
+
+
     it('should trigger multiple listeners', function () {
         addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', increment)
+        addListener(mock, 'event name', function () {
+            passed += 1
+        })
+        addListener(mock, 'event name', function () {
+            passed += 1
+        })
         emitEvent(mock, 'event name')
 
         expect(passed).to.be(3)
