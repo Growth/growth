@@ -1,5 +1,5 @@
 import expect from 'expect.js'
-import {tag, findByTag} from '../lib/tag'
+import {tag, getTag} from '../lib/tag'
 import {
     enqueue,
     processQueue,
@@ -15,7 +15,7 @@ describe('Queue', function () {
         enqueue('queueA', (next) => next())
         enqueue('queueA', (next) => next())
 
-        expect(findByTag('queue.queueA').size).to.be(2)
+        expect(getTag('queue.queueA').size).to.be(2)
     })
 
 
@@ -27,7 +27,7 @@ describe('Queue', function () {
 
         clearQueue('queueB')
 
-        expect(findByTag('queue.queueB').size).to.be(0)
+        expect(getTag('queue.queueB').size).to.be(0)
     })
 
 
