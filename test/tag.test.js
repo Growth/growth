@@ -12,27 +12,37 @@ import {
 
 describe('Tag', function () {
 
-
-    const spider = {}
+    const item = {}
     const countries = ['France', 'Spain', 'Germany']
 
 
     it('should tag an item', function () {
-        tag(spider, 'monster')
-        expect(hasTag(spider, 'monster')).to.be.ok()
+        tag(item, 'tagA')
+        expect(hasTag(item, 'tagA')).to.be.ok()
+
+        const tagB = findByTag('tagB')
+        tag(item, tagB)
+        expect(hasTag(item, tagB)).to.be.ok()
     })
 
 
 
     it('should untag an item', function () {
-        untag(spider, 'monster')
-        expect(hasTag(spider, 'monster')).to.not.be.ok()
+        untag(item, 'tagC')
+        expect(hasTag(item, 'tagC')).to.not.be.ok()
+    })
+
+
+
+    it('should check a tag for an item', function () {
+        tag(item, 'tagD')
+        expect(hasTag(item, 'tagD')).to.be.ok()
     })
 
 
 
     it('should find items by tag name', function () {
-        countries.forEach((country) => tag(country, 'country'))
+        countries.forEach((country) => tag(country, 'tagD'))
 
         expect(findByTag('country')).to.be.eql(new Set(countries))
     })
@@ -40,27 +50,27 @@ describe('Tag', function () {
 
 
     it('should clear a tag', function () {
-        countries.forEach((country) => tag(country, 'country'))
-        clearTag('country')
+        countries.forEach((country) => tag(country, 'tagE'))
+        clearTag('tagE')
 
-        expect(findByTag('country').size).to.be.eql(0)
+        expect(findByTag('tagE').size).to.be.eql(0)
     })
 
 
 
     it('should delete a tag', function () {
-        tag({}, 'hello')
-        const hello = findByTag('hello')
-        deleteTag('hello')
+        tag(item, 'tagF')
+        const tagF = findByTag('tagF')
+        deleteTag('tagF')
 
-        expect(findByTag('hello') !== hello).to.be.ok()
+        expect(findByTag('tagF') !== tagF).to.be.ok()
     })
 
 
 
     it('should find tag by name or by the tag itself', function () {
-        const hello = findByTag('hello')
-        expect(findByTag('hello') === findByTag(hello)).to.be.ok()
+        const tagG = findByTag('tagG')
+        expect(findByTag('tagG') === findByTag(tagG)).to.be.ok()
     })
 
 
