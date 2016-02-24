@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/Growth/growth.svg?branch=master)](https://travis-ci.org/Growth/growth)
-
-# Growth
+# Growth [![Build Status](https://travis-ci.org/Growth/growth.svg?branch=master)](https://travis-ci.org/Growth/growth)
 
 JavaScript (ES6) utils to make modular and scalable libraries.
 
