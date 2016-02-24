@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Growth/growth.svg?branch=master)](https://travis-ci.org/Growth/growth)
 
-JavaScript (ES6) utils to make modular and scalable libraries.
+ES6+ stack of small libraries to create reusable modules and scalabe applications.
 
 * Tag
 * Event
