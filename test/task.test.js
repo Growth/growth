@@ -1,5 +1,5 @@
 import expect from 'expect.js'
-import {spawnTask} from '../lib/task'
+import Task from '../lib/task'
 
 
 
@@ -15,7 +15,7 @@ describe('Task', function () {
 
 
     it('should spawn a task', function (done) {
-        spawnTask(function * (next) {
+        Task.spawn(function * (next) {
             let passed
 
             passed = yield asyncFunction(next, true)
