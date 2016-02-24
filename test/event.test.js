@@ -13,6 +13,7 @@ describe('Event', function () {
     }
 
 
+
     beforeEach(function () {
         mock = {}
         passed = 0
