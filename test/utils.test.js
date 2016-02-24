@@ -6,7 +6,10 @@ import {
     wrapFunction,
     checkType,
     isString,
-    addNamespace
+    isUndefined,
+    isFunction,
+    addNamespace,
+    ExtendedWeakMap
 } from '../lib/utils'
 
 
@@ -53,6 +56,19 @@ describe('Utils', function () {
 
     it('should check string type', function () {
         expect(isString('Hello')).to.be.ok()
+    })
+
+
+
+    it('should check undefined type', function () {
+        let hello
+        expect(isUndefined(hello)).to.be.ok()
+    })
+
+
+
+    it('should check function type', function () {
+        expect(isFunction(function() {})).to.be.ok()
     })
 
 
