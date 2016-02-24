@@ -9,6 +9,7 @@ import {
     isUndefined,
     isFunction,
     addNamespace,
+    stringToArray,
     ExtendedWeakMap
 } from '../lib/utils'
 
@@ -92,6 +93,12 @@ describe('Utils', function () {
         expect(namespaced).to.be.eql('namespace.identifier')
     })
 
+
+
+    it('should should convert a string to array', function () {
+        expect(stringToArray('hello, world')).to.be.eql(['hello', 'world'])
+        expect(stringToArray('hello; world', ';')).to.be.eql(['hello', 'world'])
+    })
 
 
 })
