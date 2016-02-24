@@ -10,7 +10,7 @@ describe('Queue', function () {
         Queue.enqueue('queueA', (next) => next())
         Queue.enqueue('queueA', (next) => next())
 
-        expect(Tag.get('queue.queueA').size).to.be(2)
+        expect(Tag.get('Queue.queueA').size).to.be(2)
     })
 
 
