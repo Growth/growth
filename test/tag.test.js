@@ -119,12 +119,4 @@ describe('Tag', function () {
 
 
 
-    it('should check if a tag has an item with namespace', function () {
-        const CustomTag = Tag.namespace('customF')
-        CustomTag.tag(item, 'tagJ')
-        expect(CustomTag.has(item, 'tagJ')).to.be.ok()
-    })
-
-
-
 })
