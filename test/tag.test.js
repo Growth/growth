@@ -12,32 +12,32 @@ describe('Tag', function () {
 
 
     it('should tag an item', function () {
-        Tag.add(item, 'tagA')
+        Tag.tag(item, 'tagA')
         expect(Tag.has(item, 'tagA')).to.be.ok()
 
         const tagB = Tag.get('tagB')
-        Tag.add(item, tagB)
+        Tag.tag(item, tagB)
         expect(Tag.has(item, tagB)).to.be.ok()
     })
 
 
 
     it('should untag an item', function () {
-        Tag.remove(item, 'tagC')
+        Tag.untag(item, 'tagC')
         expect(Tag.has(item, 'tagC')).to.not.be.ok()
     })
 
 
 
-    it('should check a tag for an item', function () {
-        Tag.add(item, 'tagD')
+    it('should check if a tag has an item', function () {
+        Tag.tag(item, 'tagD')
         expect(Tag.has(item, 'tagD')).to.be.ok()
     })
 
 
 
-    it('should find items by tag name', function () {
-        countries.forEach((country) => Tag.add(country, 'tagD'))
+    it('should get a tag', function () {
+        countries.forEach((country) => Tag.tag(country, 'tagD'))
 
         expect(Tag.get('country')).to.be.eql(new Set(countries))
     })
@@ -45,7 +45,7 @@ describe('Tag', function () {
 
 
     it('should clear a tag', function () {
-        countries.forEach((country) => Tag.add(country, 'tagE'))
+        countries.forEach((country) => Tag.tag(country, 'tagE'))
         Tag.clear('tagE')
 
         expect(Tag.get('tagE').size).to.be.eql(0)
@@ -54,7 +54,7 @@ describe('Tag', function () {
 
 
     it('should delete a tag', function () {
-        Tag.add(item, 'tagF')
+        Tag.tag(item, 'tagF')
         const tagF = Tag.get('tagF')
         Tag.destroy('tagF')
 
@@ -70,15 +70,15 @@ describe('Tag', function () {
 
 
 
-    it('define a tag getter with namespace', function () {
+    it('should get a tag with namespace', function () {
         const CustomTag = Tag.namespace('customA')
-        Tag.add(item, CustomTag.get('tagH'))
+        Tag.tag(item, CustomTag.get('tagH'))
         expect(Tag.has(item, 'customA.tagH')).to.be.ok()
     })
 
 
 
-    it('define a tag checker with namespace', function () {
+    it('should check if a tag exists with namespace', function () {
         const CustomTag = Tag.namespace('customB')
         expect(CustomTag.isExists('tagI')).to.not.be.ok()
         Tag.create('customB.tagI')
@@ -87,11 +87,44 @@ describe('Tag', function () {
 
 
 
-    it('define a tag creator with namespace', function () {
+    it('should create a tag with namespace', function () {
         const CustomTag = Tag.namespace('customC')
         expect(CustomTag.create('tagJ')).to.be.ok()
         expect(CustomTag.create('tagJ')).to.not.be.ok()
     })
+
+
+
+    it('should tag an item with namespace', function () {
+        const CustomTag = Tag.namespace('customD')
+        CustomTag.tag(item, 'tagH')
+        expect(CustomTag.has(item, 'tagH')).to.be.ok()
+    })
+
+
+
+    it('should untag an item with namespace', function () {
+        const CustomTag = Tag.namespace('customE')
+        CustomTag.untag(item, 'tagI')
+        expect(CustomTag.has(item, 'tagI')).to.not.be.ok()
+    })
+
+
+
+    it('should check if a tag has an item with namespace', function () {
+        const CustomTag = Tag.namespace('customF')
+        CustomTag.tag(item, 'tagJ')
+        expect(CustomTag.has(item, 'tagJ')).to.be.ok()
+    })
+
+
+
+    it('should check if a tag has an item with namespace', function () {
+        const CustomTag = Tag.namespace('customF')
+        CustomTag.tag(item, 'tagJ')
+        expect(CustomTag.has(item, 'tagJ')).to.be.ok()
+    })
+
 
 
 })
