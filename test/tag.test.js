@@ -80,9 +80,9 @@ describe('Tag', function () {
 
     it('should check if a tag exists with namespace', function () {
         const CustomTag = Tag.namespace('customB')
-        expect(CustomTag.isExists('tagI')).to.not.be.ok()
+        expect(CustomTag.exists('tagI')).to.not.be.ok()
         Tag.create('customB.tagI')
-        expect(CustomTag.isExists('tagI')).to.be.ok()
+        expect(CustomTag.exists('tagI')).to.be.ok()
     })
 
 
