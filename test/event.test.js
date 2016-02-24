@@ -1,13 +1,5 @@
 import expect from 'expect.js'
-import {
-    addListener,
-    emitEvent,
-    dispatchEvent,
-    forwardToEmit,
-    removeListener,
-    clearListeners,
-    clearEmitter
-} from '../lib/event'
+import Event from '../lib/event'
 
 
 
@@ -29,8 +21,8 @@ describe('Event', function () {
 
 
     it('should add a listener and emit an event', function () {
-        addListener(mock, 'event name', increment)
-        emitEvent(mock, 'event name')
+        Event.listen(mock, 'event name', increment)
+        Event.emit(mock, 'event name')
 
         expect(passed).to.be(1)
     })
@@ -38,9 +30,9 @@ describe('Event', function () {
 
 
     it('should not add the same listener twice', function () {
-        addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', increment)
-        emitEvent(mock, 'event name')
+        Event.listen(mock, 'event name', increment)
+        Event.listen(mock, 'event name', increment)
+        Event.emit(mock, 'event name')
 
         expect(passed).to.be(1)
     })
@@ -48,14 +40,14 @@ describe('Event', function () {
 
 
     it('should trigger multiple listeners', function () {
-        addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', function () {
+        Event.listen(mock, 'event name', increment)
+        Event.listen(mock, 'event name', function () {
             passed += 1
         })
-        addListener(mock, 'event name', function () {
+        Event.listen(mock, 'event name', function () {
             passed += 1
         })
-        emitEvent(mock, 'event name')
+        Event.emit(mock, 'event name')
 
         expect(passed).to.be(3)
     })
@@ -63,9 +55,9 @@ describe('Event', function () {
 
 
     it('should remove a listener', function () {
-        addListener(mock, 'event name', increment)
-        removeListener(mock, 'event name', increment)
-        emitEvent(mock, 'event name')
+        Event.listen(mock, 'event name', increment)
+        Event.removeListener(mock, 'event name', increment)
+        Event.emit(mock, 'event name')
 
         expect(passed).to.be(0)
     })
@@ -75,12 +67,12 @@ describe('Event', function () {
     it('should forward parameters', function () {
         let param1, param2
 
-        addListener(mock, 'custom', function (p1, p2) {
+        Event.listen(mock, 'custom', function (p1, p2) {
             param1 = p1
             param2 = p2
         })
 
-        emitEvent(mock, 'custom', 1, 2)
+        Event.emit(mock, 'custom', 1, 2)
 
         expect(param1 + param2).to.be(3)
     })
@@ -90,11 +82,11 @@ describe('Event', function () {
     it('should work with an array as emitter', function () {
         const array = [1, 2, 3]
 
-        addListener(array, 'custom', function () {
+        Event.listen(array, 'custom', function () {
             this.push(4)
         })
 
-        emitEvent(array, 'custom')
+        Event.emit(array, 'custom')
 
         expect(array).to.have.length(4)
     })
@@ -102,11 +94,11 @@ describe('Event', function () {
 
 
     it('should work with a function as emitter', function () {
-        addListener(increment, 'custom', function () {
+        Event.listen(increment, 'custom', function () {
             this()
         })
 
-        emitEvent(increment, 'custom')
+        Event.emit(increment, 'custom')
 
         expect(passed).to.be(1)
     })
@@ -114,8 +106,8 @@ describe('Event', function () {
 
 
     it('should work with a string as emitter', function () {
-        addListener('abstract emitter name', 'event name', increment)
-        emitEvent('abstract emitter name', 'event name')
+        Event.listen('abstract emitter name', 'event name', increment)
+        Event.emit('abstract emitter name', 'event name')
 
         expect(passed).to.be(1)
     })
@@ -123,10 +115,10 @@ describe('Event', function () {
 
 
     it('should dispatch an event on multiple emitters', function () {
-        addListener('emitter 1', 'event name', increment)
-        addListener('emitter 2', 'event name', increment)
-        addListener('emitter 3', 'event name', increment)
-        dispatchEvent(['emitter 1', 'emitter 2', 'emitter 3'], 'event name')
+        Event.listen('emitter 1', 'event name', increment)
+        Event.listen('emitter 2', 'event name', increment)
+        Event.listen('emitter 3', 'event name', increment)
+        Event.dispatch(['emitter 1', 'emitter 2', 'emitter 3'], 'event name')
 
         expect(passed).to.be(3)
     })
@@ -134,13 +126,13 @@ describe('Event', function () {
 
 
     it('should forward params to an emit proxy', function () {
-        addListener(mock, 'event name', (value) => passed += value)
+        Event.listen(mock, 'event name', (value) => passed += value)
 
         function foo (callback) {
             callback(2)
         }
 
-        foo(forwardToEmit(mock, 'event name'))
+        foo(Event.forwardTo(mock, 'event name'))
 
         expect(passed).to.be(2)
     })
@@ -148,12 +140,12 @@ describe('Event', function () {
 
 
     it('should clear listeners', function () {
-        addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', increment)
-        addListener(mock, 'event name', increment)
+        Event.listen(mock, 'event name', increment)
+        Event.listen(mock, 'event name', increment)
+        Event.listen(mock, 'event name', increment)
 
-        clearListeners(mock, 'event name')
-        emitEvent(mock, 'event name')
+        Event.clearListeners(mock, 'event name')
+        Event.emit(mock, 'event name')
 
         expect(passed).to.be(0)
     })
@@ -161,15 +153,15 @@ describe('Event', function () {
 
 
     it('should clear emitter', function () {
-        addListener(mock, 'event A', increment)
-        addListener(mock, 'event B', increment)
-        addListener(mock, 'event C', increment)
+        Event.listen(mock, 'event A', increment)
+        Event.listen(mock, 'event B', increment)
+        Event.listen(mock, 'event C', increment)
 
-        clearEmitter(mock)
+        Event.clearEmitter(mock)
 
-        emitEvent(mock, 'event A')
-        emitEvent(mock, 'event B')
-        emitEvent(mock, 'event C')
+        Event.emit(mock, 'event A')
+        Event.emit(mock, 'event B')
+        Event.emit(mock, 'event C')
 
         expect(passed).to.be(0)
     })
