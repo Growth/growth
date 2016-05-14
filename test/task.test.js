@@ -8,8 +8,8 @@ describe('Task', function () {
 
     function asyncFunction (next, value) {
         setTimeout(function () {
-            next(value);
-        }, 1);
+            next(value)
+        }, 1)
     }
 
 
