@@ -3,7 +3,7 @@ import Data from '../lib/data'
 
 
 
-describe('Reference', function () {
+describe('Data', function () {
 
     it('should set data', function () {
         const object = {}
