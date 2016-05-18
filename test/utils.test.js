@@ -6,11 +6,11 @@ import {
     wrapFunction,
     checkType,
     isString,
-    isUndefined,
     isFunction,
+    isUndefined,
     addNamespace,
     stringToArray,
-    ExtendedWeakMap
+    remove
 } from '../lib/utils'
 
 
@@ -30,7 +30,7 @@ describe('Utils', function () {
 
 
 
-    it('should deferred apply', function (done) {
+    it('should delayed apply', function (done) {
         delayedApply(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
@@ -39,7 +39,7 @@ describe('Utils', function () {
 
 
 
-    it('should deferred call', function (done) {
+    it('should delayed call', function (done) {
         delayedCall(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
@@ -98,6 +98,14 @@ describe('Utils', function () {
     it('should should convert a string to array', function () {
         expect(stringToArray('hello, world')).to.be.eql(['hello', 'world'])
         expect(stringToArray('hello; world', ';')).to.be.eql(['hello', 'world'])
+    })
+
+
+
+    it('should remove an item from an array', function () {
+        const array = [1, 2, 3]
+        remove(array, 3)
+        expect(array).to.be.eql([1, 2])
     })
 
 

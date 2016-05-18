@@ -38,7 +38,7 @@ describe('Component', function () {
         Event.listen(entity, 'component componentC bound', function (component) {
 
         })
-        Component.addEntity(entity, 'componentC');
+        Component.addEntity(entity, 'componentC')
         expect(entity.customValue).to.be.ok()
     })
 
