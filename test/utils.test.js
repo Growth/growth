@@ -1,8 +1,8 @@
 import expect from 'expect.js'
 import {
-    deferredApply,
-    deferredCall,
-    defer,
+    delayedApply,
+    delayedCall,
+    delay,
     wrapFunction,
     checkType,
     isString,
@@ -26,12 +26,12 @@ describe('Utils', function () {
 
 
 
-    it('should defer', defer)
+    it('should delay', delay)
 
 
 
     it('should deferred apply', function (done) {
-        deferredApply(function (arg1, arg2) {
+        delayedApply(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
         }, null, [true, true])
@@ -40,7 +40,7 @@ describe('Utils', function () {
 
 
     it('should deferred call', function (done) {
-        deferredCall(function (arg1, arg2) {
+        delayedCall(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
         }, null, true, true)
