@@ -14,10 +14,10 @@ describe('Tag', function () {
     it('should tag an item', function () {
         Tag.set(item, 'tagA')
         expect(Tag.has(item, 'tagA')).to.be.ok()
-        // 
-        // const tagB = Tag.get('tagB')
-        // Tag.set(item, tagB)
-        // expect(Tag.has(item, tagB)).to.be.ok()
+
+        const tagB = Tag.get('tagB')
+        Tag.set(item, tagB)
+        expect(Tag.has(item, tagB)).to.be.ok()
     })
 
 
