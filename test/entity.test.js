@@ -1,6 +1,6 @@
 import expect from 'expect.js'
 import Event from '../lib/event'
-import Component from '../lib/component'
+import Ability from '../lib/ability'
 import Entity from '../lib/entity'
 
 
@@ -8,25 +8,30 @@ import Entity from '../lib/entity'
 describe('Entity', function () {
 
 
-    Component.register('hello', function (component) {
-        Event.listen(component, 'entity added', function (entity) {
+
+    Ability.register('hello', function (ability) {
+        Event.listen(ability, 'entity added', function (entity) {
             entity.x = 1
         })
 
-        Event.listen(component, 'entity removed', function (entity) {
+        Event.listen(ability, 'entity removed', function (entity) {
             delete entity.x
         })
     })
 
-    Component.register('foo', function (component) {
-        Event.listen(component, 'entity added', function (entity) {
+
+
+    Ability.register('foo', function (ability) {
+        Event.listen(ability, 'entity added', function (entity) {
             entity.x = 2
         })
     })
 
-    Component.register('bar', function (component) {
-        Event.listen(component, 'entity added', function (entity) {
-            Entity.addComponent(entity, 'foo')
+
+
+    Ability.register('bar', function (ability) {
+        Event.listen(ability, 'entity added', function (entity) {
+            Entity.addAbility(entity, 'foo')
             entity.x += 1
         })
     })
@@ -45,9 +50,9 @@ describe('Entity', function () {
 
 
 
-    it('should add component', function () {
+    it('should add ability', function () {
         const entityA = Entity.create()
-        Entity.addComponent(entityA, 'hello')
+        Entity.addAbility(entityA, 'hello')
 
         const entityB = Entity.create(['bar'])
         expect(entityA.x).to.be.eql(1)
@@ -56,24 +61,24 @@ describe('Entity', function () {
 
 
 
-    it('should check if an entity has a component', function () {
-        const entityA = Entity.create('hello')
-        expect(Entity.hasComponent(entityA, 'hello')).to.be.ok()
+    it('should check if an entity has an ability', function () {
+        const entity = Entity.create('hello')
+        expect(Entity.hasAbility(entity, 'hello')).to.be.ok()
     })
 
 
 
-    it('should get the components list from an entity', function () {
-        const entityA = Entity.create('hello, foo')
-        expect(Entity.getComponentsList(entityA)).to.be.eql(new Set(['hello', 'foo']))
+    it('should get the abilities from an entity', function () {
+        const entity = Entity.create('hello, foo')
+        expect(Entity.getAbilities(entity)).to.be.eql(new Set(['hello', 'foo']))
     })
 
 
 
-    it('should remove a component', function () {
-        const entityA = Entity.create('hello')
-        Entity.removeComponent(entityA, 'hello')
-        expect(entityA.x).to.be.eql(undefined)
+    it('should remove an ability', function () {
+        const entity = Entity.create('hello')
+        Entity.removeAbility(entity, 'hello')
+        expect(entity.x).to.be.eql(undefined)
     })
 
 
@@ -87,7 +92,7 @@ describe('Entity', function () {
         })
         Entity.destroy(entityA)
         expect(destroyed).to.be.ok()
-        expect(Entity.getComponentsList(entityA)).to.be.eql(new Set())
+        expect(Entity.getAbilities(entityA)).to.be.eql(new Set())
     })
 
 
