@@ -7,8 +7,8 @@ describe('Queue', function () {
 
     it('should enqueue a processor', function () {
 
-        Queue.enqueue('queueA', (next) => next())
-        Queue.enqueue('queueA', (next) => next())
+        Queue.append('queueA', (next) => next())
+        Queue.append('queueA', (next) => next())
 
         expect(Tag.get('Queue.queueA').size).to.be(2)
     })
@@ -18,10 +18,10 @@ describe('Queue', function () {
     it('should process a queue', function (done) {
 
         let inc = 0
-        Queue.enqueue('queueC', (next) => {inc += 1; next()})
-        Queue.enqueue('queueC', (next) => {inc += 1; next()})
+        Queue.append('queueC', (next) => {inc += 1; next()})
+        Queue.append('queueC', (next) => {inc += 1; next()})
 
-        Queue.enqueue('queueC', function (next) {
+        Queue.append('queueC', function (next) {
             setTimeout(function () {
                 inc += 1
                 next()
@@ -30,15 +30,15 @@ describe('Queue', function () {
             })
         })
 
-        Queue.start('queueC')
+        Queue.run('queueC')
     })
 
 
 
     it('should clear a queue', function () {
 
-        Queue.enqueue('queueB', (next) => next())
-        Queue.enqueue('queueB', (next) => next())
+        Queue.append('queueB', (next) => next())
+        Queue.append('queueB', (next) => next())
 
         Queue.clear('queueB')
 
@@ -49,8 +49,8 @@ describe('Queue', function () {
 
     it('should stop a queue while processing', function (done) {
         let inc = 0
-        Queue.enqueue('queueD', (next) => {inc += 1; next()})
-        Queue.enqueue('queueD', function (next) {
+        Queue.append('queueD', (next) => {inc += 1; next()})
+        Queue.append('queueD', function (next) {
             setTimeout(function () {
                 inc += 1
                 Queue.stop('queueD')
@@ -61,29 +61,29 @@ describe('Queue', function () {
                 next()
             })
         })
-        Queue.enqueue('queueD', function (next) {
+        Queue.append('queueD', function (next) {
             setTimeout(function () {
                 inc += 1
                 next()
                 done()
             })
         })
-        Queue.start('queueD')
+        Queue.run('queueD')
     })
 
 
 
     it('should enqueue while processing', function (done) {
         let inc = 0
-        Queue.enqueue('queueD', (next) => {inc += 1; next()})
-        Queue.enqueue('queueD', function (next) {
+        Queue.append('queueD', (next) => {inc += 1; next()})
+        Queue.append('queueD', function (next) {
             setTimeout(function () {
                 inc += 1
                 next()
             })
         })
-        Queue.start('queueD')
-        Queue.enqueue('queueD', function (next) {
+        Queue.run('queueD')
+        Queue.append('queueD', function (next) {
             setTimeout(function () {
                 inc += 1
                 next()
@@ -97,10 +97,10 @@ describe('Queue', function () {
 
     it('should not process already running queue', function (done) {
         let inc = 0
-        Queue.enqueue('queueE', (next) => {inc += 1; next()})
-        Queue.enqueue('queueE', (next) => {inc += 1; next()})
+        Queue.append('queueE', (next) => {inc += 1; next()})
+        Queue.append('queueE', (next) => {inc += 1; next()})
 
-        Queue.enqueue('queueE', function (next) {
+        Queue.append('queueE', function (next) {
             setTimeout(function () {
                 inc += 1
                 next()
@@ -115,8 +115,8 @@ describe('Queue', function () {
             });
         }
 
-        Queue.start('queueE')
-        Queue.start('queueE')
+        Queue.run('queueE')
+        Queue.run('queueE')
     })
 
 
@@ -124,17 +124,17 @@ describe('Queue', function () {
     it('should check running queue state', function (done) {
 
         let inc = 0
-        Queue.enqueue('queueF', (next) => next())
-        Queue.enqueue('queueF', (next) => next())
+        Queue.append('queueF', (next) => next())
+        Queue.append('queueF', (next) => next())
 
-        Queue.enqueue('queueF', function (next) {
+        Queue.append('queueF', function (next) {
             setTimeout(function () {
                 next()
                 done()
             })
         })
 
-        Queue.start('queueF')
+        Queue.run('queueF')
         expect(Queue.isRunning('queueF')).to.be.ok()
     })
 
