@@ -1,5 +1,5 @@
 import expect from 'expect.js'
-import Data from '../lib/data'
+import Link from '../lib/link'
 
 
 
@@ -9,8 +9,8 @@ describe('Data', function () {
         const object = {}
         const key = 'hello'
 
-        Data.set(object, key, 'world')
-        expect(Data.get(object, key)).to.be.eql('world')
+        Data.attach(object, key, 'world')
+        expect(Data.fetch(object, key)).to.be.eql('world')
     })
 
 
@@ -19,9 +19,9 @@ describe('Data', function () {
         const object = {}
         const key = 'hello'
 
-        Data.set(object, key, 'world')
-        Data.unset(object, key, 'world')
-        expect(Data.get(object, key)).to.be.eql(undefined)
+        Data.attach(object, key, 'world')
+        Data.detach(object, key, 'world')
+        expect(Data.fetch(object, key)).to.be.eql(undefined)
     })
 
 })
