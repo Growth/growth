@@ -1,16 +1,17 @@
 import expect from 'expect.js'
 import {
-    delayedApply,
-    delayedCall,
+    delayApply,
+    delayCall,
     delay,
-    wrapFunction,
-    checkType,
+    wrap,
+    check,
     isString,
     isFunction,
     isUndefined,
     addNamespace,
     stringToArray,
-    remove
+    remove,
+    spawnTask
 } from '../lib/utils'
 
 
@@ -31,7 +32,7 @@ describe('Utils', function () {
 
 
     it('should delayed apply', function (done) {
-        delayedApply(function (arg1, arg2) {
+        delayApply(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
         }, null, [true, true])
@@ -40,7 +41,7 @@ describe('Utils', function () {
 
 
     it('should delayed call', function (done) {
-        delayedCall(function (arg1, arg2) {
+        delayCall(function (arg1, arg2) {
             expect(arg1 && arg2).to.be.ok()
             done()
         }, null, true, true)
@@ -49,8 +50,8 @@ describe('Utils', function () {
 
 
     it('should check types', function () {
-        expect(checkType('Hello', 'string')).to.be.ok()
-        expect(checkType({}, 'object')).to.be.ok()
+        expect(check('Hello', 'string')).to.be.ok()
+        expect(check({}, 'object')).to.be.ok()
     })
 
 
@@ -78,7 +79,7 @@ describe('Utils', function () {
         function hello (a, b) {
             return a + b
         }
-        const wrappedFunction = wrapFunction(hello, function (a, b) {
+        const wrappedFunction = wrap(hello, function (a, b) {
             a += 1
             b += 1
             return [a, b]
@@ -107,6 +108,28 @@ describe('Utils', function () {
         remove(array, 3)
         expect(array).to.be.eql([1, 2])
     })
+
+
+
+    function asyncFunction (next, value) {
+        setTimeout(function () {
+            next(value)
+        }, 1)
+    }
+
+    it('should spawn a task', function (done) {
+        spawnTask(function * (next) {
+            let passed
+
+            passed = yield asyncFunction(next, true)
+            passed = yield asyncFunction(next, false)
+            passed = yield asyncFunction(next, true)
+
+            expect(passed).to.be.ok()
+            done()
+        })
+    })
+
 
 
 })
