@@ -46,105 +46,121 @@
 
 	'use strict';
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(2);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _tag = __webpack_require__(2);
+	var _todolist_ui = __webpack_require__(1);
 
-	var _tag2 = _interopRequireDefault(_tag);
+	var _todolist_ui2 = _interopRequireDefault(_todolist_ui);
 
-	var _event = __webpack_require__(4);
+	var _todolist_api = __webpack_require__(6);
+
+	var _todolist_api2 = _interopRequireDefault(_todolist_api);
+
+	var _event = __webpack_require__(5);
 
 	var _event2 = _interopRequireDefault(_event);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var itemTemplate = '\n    <li data-id="{{id}}" class="{{completed}}">\n        <div class="view">\n            <input class="toggle" type="checkbox" {{checked}}>\n            <label>{{title}}</label>\n            <button class="destroy"></button>\n        </div>\n    </li>\n';
+	_event2.default.listen('todolist', 'item added', _todolist_ui2.default.displayItem);
+	_event2.default.listen('todolist', 'item added', _todolist_ui2.default.displayItemsCount);
+	_event2.default.listen('todolist', 'item updated', _todolist_ui2.default.displayItem);
+	_event2.default.listen('todolist', 'item removed', _todolist_ui2.default.displayItemsCount);
+	_event2.default.listen('todolist', 'item removed', _todolist_ui2.default.removeItemElement);
+	_event2.default.listen('todolist', 'filter selected', _todolist_ui2.default.markFilter);
+	_event2.default.listen('todolist', 'filter selected', _todolist_ui2.default.displayItems);
+	_event2.default.listen('todolist', 'completed cleared', _todolist_ui2.default.displayItems);
 
-	var itemsMap = new Map();
-	var todolist = _tag2.default.create('todolist');
-	var completed = _tag2.default.create('completed');
-	var active = _tag2.default.create('active');
+	(0, _jquery2.default)('.new-todo').on('keydown', addItem);
+	(0, _jquery2.default)('.todo-list').on('click', 'li .toggle', toggleComplete);
+	(0, _jquery2.default)('.todo-list').on('dblclick', 'li label', editItem);
+	(0, _jquery2.default)('.todo-list').on('blur', 'li .edit', leaveEdition);
+	(0, _jquery2.default)('.todo-list').on('keydown', 'li .edit', handleEdition);
+	(0, _jquery2.default)('.todo-list').on('click', 'li .destroy', removeItem);
+	(0, _jquery2.default)('.filters li a').on('click', selectFilter);
+	(0, _jquery2.default)('.clear-completed').on('click', _todolist_api2.default.clearCompleted);
 
-	var uid = 0;
-	var currentView = 'todolist';
-
-	(0, _jquery2.default)('.new-todo').on('keydown', function (e) {
+	function addItem(e) {
 	    if (e.keyCode === 13) {
-	        addItem({
-	            id: uid += 1,
+	        _todolist_api2.default.addItem({
 	            title: (0, _jquery2.default)(this).val(),
 	            completed: false
 	        });
 	        (0, _jquery2.default)(this).val('');
 	    }
-	});
+	}
 
-	(0, _jquery2.default)('.todo-list').on('click', 'li .toggle', function () {
-	    var item = getItem((0, _jquery2.default)(this).parents('li').data('id'));
-	    updateItem(item, {
+	function toggleComplete() {
+	    _todolist_api2.default.updateItem(getBoundItem(this), {
 	        completed: (0, _jquery2.default)(this).is(':checked')
 	    });
-	});
+	}
 
-	(0, _jquery2.default)('.todo-list').on('dblclick', 'li label', function () {
-	    displayItemEditor(getItem((0, _jquery2.default)(this).parents('li').data('id')));
-	});
+	function editItem() {
+	    _todolist_ui2.default.displayItemEditor(getBoundItem(this));
+	}
 
-	(0, _jquery2.default)('.todo-list').on('blur', 'li .edit', function () {
-	    var item = getItem((0, _jquery2.default)(this).parents('li').data('id'));
-	    updateItem(item, {
+	function leaveEdition() {
+	    _todolist_api2.default.updateItem(getBoundItem(this), {
 	        title: (0, _jquery2.default)(this).val()
 	    });
-	});
+	}
 
-	(0, _jquery2.default)('.todo-list').on('keydown', 'li .edit', function (e) {
-	    var item = getItem((0, _jquery2.default)(this).parents('li').data('id'));
+	function handleEdition(e) {
+	    var item = getBoundItem(this);
+
 	    if (e.keyCode === 13) {
-	        updateItem(item, {
+	        _todolist_api2.default.updateItem(item, {
 	            title: (0, _jquery2.default)(this).val()
 	        });
 	    }
 
 	    if (e.keyCode === 27) {
-	        displayItem(item);
+	        _todolist_ui2.default.displayItem(item);
 	    }
-	});
-
-	(0, _jquery2.default)('.todo-list').on('click', 'li .destroy', function () {
-	    removeItem(getItem((0, _jquery2.default)(this).parents('li').data('id')));
-	});
-
-	(0, _jquery2.default)('.filters li a').on('click', function () {
-	    selectFilter(getFilter((0, _jquery2.default)(this).attr('href')));
-	});
-
-	(0, _jquery2.default)('.clear-completed').on('click', clearCompleted);
-
-	_event2.default.listen(todolist, 'item added', displayItem);
-	_event2.default.listen(todolist, 'item added', displayItemsCount);
-	_event2.default.listen(todolist, 'item added', updateStorage);
-
-	_event2.default.listen(todolist, 'item updated', displayItem);
-	_event2.default.listen(todolist, 'item updated', updateStorage);
-
-	_event2.default.listen(todolist, 'item removed', displayItemsCount);
-	_event2.default.listen(todolist, 'item removed', updateStorage);
-	_event2.default.listen(todolist, 'item removed', removeItemElement);
-
-	_event2.default.listen(todolist, 'filter selected', markFilter);
-	_event2.default.listen(todolist, 'filter selected', displayItems);
-
-	_event2.default.listen(todolist, 'completed cleared', displayItems);
-	_event2.default.listen(todolist, 'completed cleared', updateStorage);
-
-	function addItem(item) {
-	    itemsMap.set(item.id, item);
-	    _tag2.default.set(item, todolist);
-	    _tag2.default.set(item, active);
-	    _event2.default.emit(todolist, 'item added', item);
 	}
+
+	function removeItem() {
+	    _todolist_api2.default.removeItem(getBoundItem(this));
+	}
+
+	function selectFilter() {
+	    _todolist_ui2.default.selectFilter(_todolist_ui2.default.getFilter((0, _jquery2.default)(this).attr('href')));
+	}
+
+	function getBoundItem(element) {
+	    return _todolist_api2.default.getItem((0, _jquery2.default)(element).parents('li').data('id'));
+	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _jquery = __webpack_require__(2);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _tag = __webpack_require__(3);
+
+	var _tag2 = _interopRequireDefault(_tag);
+
+	var _event = __webpack_require__(5);
+
+	var _event2 = _interopRequireDefault(_event);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var currentView = 'todolist';
+
+	var itemTemplate = '\n    <li data-id="{{id}}" class="{{completed}}">\n        <div class="view">\n            <input class="toggle" type="checkbox" {{checked}}>\n            <label>{{title}}</label>\n            <button class="destroy"></button>\n        </div>\n    </li>\n';
 
 	function renderItem(item) {
 	    var completed = item.completed ? 'completed' : '';
@@ -153,11 +169,29 @@
 	    return itemTemplate.replace('{{id}}', item.id).replace('{{title}}', escape(item.title)).replace('{{completed}}', completed).replace('{{checked}}', checked);
 	}
 
-	function updateItem(item, data) {
-	    Object.assign(item, data);
-	    _tag2.default.toggle(item, completed, item.completed);
-	    _tag2.default.toggle(item, active, !item.completed);
-	    _event2.default.emit(todolist, 'item updated', item);
+	function getItemElement(item) {
+	    var $item = (0, _jquery2.default)('.todo-list [data-id=' + item.id + ']');
+	    return $item.length ? $item : false;
+	}
+
+	function getFilter(anchor) {
+	    var filter = anchor.replace('#/', '');
+	    return filter === '' ? 'todolist' : filter;
+	}
+
+	function getAnchor(filter) {
+	    var anchor = '#/';
+	    return filter === 'todolist' ? anchor : '' + anchor + filter;
+	}
+
+	function selectFilter(filter) {
+	    currentView = filter;
+	    _event2.default.emit('todolist', 'filter selected', filter);
+	}
+
+	function markFilter(filter) {
+	    (0, _jquery2.default)('.filters li a').removeClass('selected');
+	    (0, _jquery2.default)('.filters li a[href="' + getAnchor(filter) + '"]').addClass('selected');
 	}
 
 	function displayItem(item) {
@@ -224,87 +258,19 @@
 	    return word + (size > 1 ? 's' : '');
 	}
 
-	function getItem(id) {
-	    return itemsMap.get(id);
-	}
-
-	function removeItem(item) {
-	    itemsMap.delete(item.id);
-	    _tag2.default.unset(item, 'todolist', 'completed', 'active');
-	    _event2.default.emit(todolist, 'item removed', item);
-	}
-
-	function clearCompleted() {
-	    var _iteratorNormalCompletion2 = true;
-	    var _didIteratorError2 = false;
-	    var _iteratorError2 = undefined;
-
-	    try {
-	        for (var _iterator2 = completed[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	            var item = _step2.value;
-
-	            removeItem(item);
-	        }
-	    } catch (err) {
-	        _didIteratorError2 = true;
-	        _iteratorError2 = err;
-	    } finally {
-	        try {
-	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                _iterator2.return();
-	            }
-	        } finally {
-	            if (_didIteratorError2) {
-	                throw _iteratorError2;
-	            }
-	        }
-	    }
-
-	    _event2.default.emit(todolist, 'completed cleared');
-	}
-
-	function getItemElement(item) {
-	    var $item = (0, _jquery2.default)('.todo-list [data-id=' + item.id + ']');
-	    return $item.length ? $item : false;
-	}
-
-	function getFilter(anchor) {
-	    var filter = anchor.replace('#/', '');
-	    return filter === '' ? 'todolist' : filter;
-	}
-
-	function getAnchor(filter) {
-	    var anchor = '#/';
-	    return filter === 'todolist' ? anchor : '' + anchor + filter;
-	}
-
-	function selectFilter(filter) {
-	    currentView = filter;
-	    _event2.default.emit(todolist, 'filter selected', filter);
-	}
-
-	function markFilter(filter) {
-	    (0, _jquery2.default)('.filters li a').removeClass('selected');
-	    (0, _jquery2.default)('.filters li a[href="' + getAnchor(filter) + '"]').addClass('selected');
-	}
-
-	function initStorage() {
-	    if (!localStorage.todolist) {
-	        updateStorage();
-	    }
-	}
-
-	function getStorage() {
-	    initStorage();
-	    return new Set(JSON.parse(localStorage.todolist));
-	}
-
-	function updateStorage() {
-	    localStorage.todolist = JSON.stringify(todolist);
-	}
+	exports.default = {
+	    getFilter: getFilter,
+	    selectFilter: selectFilter,
+	    displayItem: displayItem,
+	    displayItems: displayItems,
+	    displayItemsCount: displayItemsCount,
+	    displayItemEditor: displayItemEditor,
+	    removeItemElement: removeItemElement,
+	    markFilter: markFilter
+	};
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10124,7 +10090,7 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10133,7 +10099,7 @@
 	    value: true
 	});
 
-	var _utils = __webpack_require__(3);
+	var _utils = __webpack_require__(4);
 
 	var tags = new Map();
 	var Tag = {
@@ -10275,7 +10241,7 @@
 	exports.default = Tag;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -10386,7 +10352,7 @@
 	exports.spawnTask = spawnTask;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10395,7 +10361,7 @@
 	    value: true
 	});
 
-	var _utils = __webpack_require__(3);
+	var _utils = __webpack_require__(4);
 
 	var listenersRegisters = new WeakMap();
 	var stringEmitters = {};
@@ -10530,6 +10496,91 @@
 	    removeListener: removeListener,
 	    clearListeners: clearListeners,
 	    clearEmitter: clearEmitter
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _tag = __webpack_require__(3);
+
+	var _tag2 = _interopRequireDefault(_tag);
+
+	var _event = __webpack_require__(5);
+
+	var _event2 = _interopRequireDefault(_event);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var itemsMap = new Map();
+	var uid = 0;
+
+	function addItem(item) {
+	    item.id = uid += 1;
+	    itemsMap.set(item.id, item);
+	    _tag2.default.set(item, 'todolist');
+	    _tag2.default.set(item, 'active');
+	    _event2.default.emit('todolist', 'item added', item);
+	}
+
+	function updateItem(item, data) {
+	    Object.assign(item, data);
+	    _tag2.default.toggle(item, 'completed', item.completed);
+	    _tag2.default.toggle(item, 'active', !item.completed);
+	    _event2.default.emit('todolist', 'item updated', item);
+	}
+
+	function getItem(id) {
+	    return itemsMap.get(id);
+	}
+
+	function removeItem(item) {
+	    itemsMap.delete(item.id);
+	    _tag2.default.unset(item, 'todolist', 'completed', 'active');
+	    _event2.default.emit('todolist', 'item removed', item);
+	}
+
+	function clearCompleted() {
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = _tag2.default.get('completed')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var item = _step.value;
+
+	            removeItem(item);
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+
+	    _event2.default.emit('todolist', 'completed cleared');
+	}
+
+	exports.default = {
+	    addItem: addItem,
+	    updateItem: updateItem,
+	    getItem: getItem,
+	    removeItem: removeItem,
+	    clearCompleted: clearCompleted
 	};
 
 /***/ }
