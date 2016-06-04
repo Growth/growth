@@ -19,8 +19,9 @@ const itemTemplate = `
 
 
 function renderItem (item) {
-    const completed = item.completed ? 'completed': ''
-    const checked = item.completed ? 'checked': ''
+    const isCompleted = Tag.has(item, 'completed')
+    const completed = isCompleted ? 'completed': ''
+    const checked = isCompleted ? 'checked': ''
 
     return itemTemplate.replace('{{id}}', item.id)
         .replace('{{title}}', escape(item.title))

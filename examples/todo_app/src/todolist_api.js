@@ -18,9 +18,9 @@ function addItem (item) {
 
 
 function updateItem (item, data) {
-    Object.assign(item, data)
-    Tag.toggle(item, 'completed', item.completed)
-    Tag.toggle(item, 'active', !item.completed)
+    item.title = data.title || item.title
+    Tag.toggle(item, 'completed', data.completed)
+    Tag.toggle(item, 'active', !data.completed)
     Event.emit('todolist', 'item updated', item)
 }
 

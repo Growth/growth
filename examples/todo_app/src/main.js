@@ -8,6 +8,7 @@ import Event from '../../../lib/event'
 Event.listen('todolist', 'item added', UI.displayItem)
 Event.listen('todolist', 'item added', UI.displayItemsCount)
 Event.listen('todolist', 'item updated', UI.displayItem)
+Event.listen('todolist', 'item updated', UI.displayItemsCount)
 Event.listen('todolist', 'item removed', UI.displayItemsCount)
 Event.listen('todolist', 'item removed', UI.removeItemElement)
 Event.listen('todolist', 'filter selected', UI.markFilter)
@@ -36,6 +37,7 @@ function addItem (e) {
         $(this).val('')
     }
 }
+
 
 
 function toggleComplete () {

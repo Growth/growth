@@ -46,11 +46,11 @@
 
 	'use strict';
 
-	var _jquery = __webpack_require__(2);
+	var _jquery = __webpack_require__(1);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _todolist_ui = __webpack_require__(1);
+	var _todolist_ui = __webpack_require__(2);
 
 	var _todolist_ui2 = _interopRequireDefault(_todolist_ui);
 
@@ -67,6 +67,7 @@
 	_event2.default.listen('todolist', 'item added', _todolist_ui2.default.displayItem);
 	_event2.default.listen('todolist', 'item added', _todolist_ui2.default.displayItemsCount);
 	_event2.default.listen('todolist', 'item updated', _todolist_ui2.default.displayItem);
+	_event2.default.listen('todolist', 'item updated', _todolist_ui2.default.displayItemsCount);
 	_event2.default.listen('todolist', 'item removed', _todolist_ui2.default.displayItemsCount);
 	_event2.default.listen('todolist', 'item removed', _todolist_ui2.default.removeItemElement);
 	_event2.default.listen('todolist', 'filter selected', _todolist_ui2.default.markFilter);
@@ -136,141 +137,6 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _jquery = __webpack_require__(2);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _tag = __webpack_require__(3);
-
-	var _tag2 = _interopRequireDefault(_tag);
-
-	var _event = __webpack_require__(5);
-
-	var _event2 = _interopRequireDefault(_event);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var currentView = 'todolist';
-
-	var itemTemplate = '\n    <li data-id="{{id}}" class="{{completed}}">\n        <div class="view">\n            <input class="toggle" type="checkbox" {{checked}}>\n            <label>{{title}}</label>\n            <button class="destroy"></button>\n        </div>\n    </li>\n';
-
-	function renderItem(item) {
-	    var completed = item.completed ? 'completed' : '';
-	    var checked = item.completed ? 'checked' : '';
-
-	    return itemTemplate.replace('{{id}}', item.id).replace('{{title}}', escape(item.title)).replace('{{completed}}', completed).replace('{{checked}}', checked);
-	}
-
-	function getItemElement(item) {
-	    var $item = (0, _jquery2.default)('.todo-list [data-id=' + item.id + ']');
-	    return $item.length ? $item : false;
-	}
-
-	function getFilter(anchor) {
-	    var filter = anchor.replace('#/', '');
-	    return filter === '' ? 'todolist' : filter;
-	}
-
-	function getAnchor(filter) {
-	    var anchor = '#/';
-	    return filter === 'todolist' ? anchor : '' + anchor + filter;
-	}
-
-	function selectFilter(filter) {
-	    currentView = filter;
-	    _event2.default.emit('todolist', 'filter selected', filter);
-	}
-
-	function markFilter(filter) {
-	    (0, _jquery2.default)('.filters li a').removeClass('selected');
-	    (0, _jquery2.default)('.filters li a[href="' + getAnchor(filter) + '"]').addClass('selected');
-	}
-
-	function displayItem(item) {
-	    var $item = getItemElement(item);
-	    var template = renderItem(item);
-
-	    if (!_tag2.default.has(item, currentView)) {
-	        $item.remove();
-	    } else if ($item) {
-	        $item.replaceWith(template);
-	    } else {
-	        (0, _jquery2.default)('.todo-list').prepend(template);
-	    }
-	}
-
-	function displayItemEditor(item) {
-	    var $item = getItemElement(item);
-	    $item.addClass('editing');
-	    var $input = (0, _jquery2.default)('<input class="edit">');
-	    $item.append($input);
-	    $input.focus();
-	    $input.val(item.title);
-	}
-
-	function displayItems() {
-	    (0, _jquery2.default)('.todo-list').html('');
-	    var _iteratorNormalCompletion = true;
-	    var _didIteratorError = false;
-	    var _iteratorError = undefined;
-
-	    try {
-	        for (var _iterator = _tag2.default.get(currentView)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var item = _step.value;
-
-	            displayItem(item);
-	        }
-	    } catch (err) {
-	        _didIteratorError = true;
-	        _iteratorError = err;
-	    } finally {
-	        try {
-	            if (!_iteratorNormalCompletion && _iterator.return) {
-	                _iterator.return();
-	            }
-	        } finally {
-	            if (_didIteratorError) {
-	                throw _iteratorError;
-	            }
-	        }
-	    }
-	}
-
-	function removeItemElement(item) {
-	    getItemElement(item).remove();
-	}
-
-	function displayItemsCount() {
-	    var size = _tag2.default.get(currentView).size;
-	    var text = size + ' ' + pluralize('item', size) + ' left';
-	    (0, _jquery2.default)('.todo-count').text(text);
-	}
-
-	function pluralize(word, size) {
-	    return word + (size > 1 ? 's' : '');
-	}
-
-	exports.default = {
-	    getFilter: getFilter,
-	    selectFilter: selectFilter,
-	    displayItem: displayItem,
-	    displayItems: displayItems,
-	    displayItemsCount: displayItemsCount,
-	    displayItemEditor: displayItemEditor,
-	    removeItemElement: removeItemElement,
-	    markFilter: markFilter
-	};
-
-/***/ },
-/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10090,6 +9956,142 @@
 
 
 /***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _tag = __webpack_require__(3);
+
+	var _tag2 = _interopRequireDefault(_tag);
+
+	var _event = __webpack_require__(5);
+
+	var _event2 = _interopRequireDefault(_event);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var currentView = 'todolist';
+
+	var itemTemplate = '\n    <li data-id="{{id}}" class="{{completed}}">\n        <div class="view">\n            <input class="toggle" type="checkbox" {{checked}}>\n            <label>{{title}}</label>\n            <button class="destroy"></button>\n        </div>\n    </li>\n';
+
+	function renderItem(item) {
+	    var isCompleted = _tag2.default.has(item, 'completed');
+	    var completed = isCompleted ? 'completed' : '';
+	    var checked = isCompleted ? 'checked' : '';
+
+	    return itemTemplate.replace('{{id}}', item.id).replace('{{title}}', escape(item.title)).replace('{{completed}}', completed).replace('{{checked}}', checked);
+	}
+
+	function getItemElement(item) {
+	    var $item = (0, _jquery2.default)('.todo-list [data-id=' + item.id + ']');
+	    return $item.length ? $item : false;
+	}
+
+	function getFilter(anchor) {
+	    var filter = anchor.replace('#/', '');
+	    return filter === '' ? 'todolist' : filter;
+	}
+
+	function getAnchor(filter) {
+	    var anchor = '#/';
+	    return filter === 'todolist' ? anchor : '' + anchor + filter;
+	}
+
+	function selectFilter(filter) {
+	    currentView = filter;
+	    _event2.default.emit('todolist', 'filter selected', filter);
+	}
+
+	function markFilter(filter) {
+	    (0, _jquery2.default)('.filters li a').removeClass('selected');
+	    (0, _jquery2.default)('.filters li a[href="' + getAnchor(filter) + '"]').addClass('selected');
+	}
+
+	function displayItem(item) {
+	    var $item = getItemElement(item);
+	    var template = renderItem(item);
+
+	    if (!_tag2.default.has(item, currentView)) {
+	        $item.remove();
+	    } else if ($item) {
+	        $item.replaceWith(template);
+	    } else {
+	        (0, _jquery2.default)('.todo-list').prepend(template);
+	    }
+	}
+
+	function displayItemEditor(item) {
+	    var $item = getItemElement(item);
+	    $item.addClass('editing');
+	    var $input = (0, _jquery2.default)('<input class="edit">');
+	    $item.append($input);
+	    $input.focus();
+	    $input.val(item.title);
+	}
+
+	function displayItems() {
+	    (0, _jquery2.default)('.todo-list').html('');
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
+
+	    try {
+	        for (var _iterator = _tag2.default.get(currentView)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var item = _step.value;
+
+	            displayItem(item);
+	        }
+	    } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	            }
+	        } finally {
+	            if (_didIteratorError) {
+	                throw _iteratorError;
+	            }
+	        }
+	    }
+	}
+
+	function removeItemElement(item) {
+	    getItemElement(item).remove();
+	}
+
+	function displayItemsCount() {
+	    var size = _tag2.default.get(currentView).size;
+	    var text = size + ' ' + pluralize('item', size) + ' left';
+	    (0, _jquery2.default)('.todo-count').text(text);
+	}
+
+	function pluralize(word, size) {
+	    return word + (size > 1 ? 's' : '');
+	}
+
+	exports.default = {
+	    getFilter: getFilter,
+	    selectFilter: selectFilter,
+	    displayItem: displayItem,
+	    displayItems: displayItems,
+	    displayItemsCount: displayItemsCount,
+	    displayItemEditor: displayItemEditor,
+	    removeItemElement: removeItemElement,
+	    markFilter: markFilter
+	};
+
+/***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10530,9 +10532,9 @@
 	}
 
 	function updateItem(item, data) {
-	    Object.assign(item, data);
-	    _tag2.default.toggle(item, 'completed', item.completed);
-	    _tag2.default.toggle(item, 'active', !item.completed);
+	    item.title = data.title || item.title;
+	    _tag2.default.toggle(item, 'completed', data.completed);
+	    _tag2.default.toggle(item, 'active', !data.completed);
 	    _event2.default.emit('todolist', 'item updated', item);
 	}
 
