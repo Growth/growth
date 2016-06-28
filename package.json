@@ -1,6 +1,6 @@
 {
   "name": "growth",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "ES6+ stack of small libraries to create reusable modules and scalable applications",
   "keywords": [
     "javascript",
