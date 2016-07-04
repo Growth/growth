@@ -105,4 +105,10 @@ describe('utils', function () {
 
 
 
+    it('should validate presence of params', function () {
+        const object = {myParam: true}
+        expect(utils.validatePresence(object, 'myParam')).to.be.ok()
+    })
+
+
 })
